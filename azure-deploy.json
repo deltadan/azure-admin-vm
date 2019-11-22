@@ -1,0 +1,183 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Username for the Virtual Machine."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password for the Virtual Machine."
+      }
+    },
+    "dnsLabelPrefix": {
+      "type": "string",
+      "defaultValue": "[concat('vm-', uniqueString(resourceGroup().id))]",
+      "metadata": {
+        "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+      }
+    }
+  },
+  "variables": {
+    "azureAdminVmPrefix": "192.168.0.0/24",
+    "azureAdminVmSubnet1Name": "azure-admin-vm",
+    "azureAdminVmSubnet1Prefix": "192.168.0.0/24",
+    "azureAdminVmName": "azure-admin-vm",
+    "azureAdminVmImagePublisher": "MicrosoftWindowsDesktop",
+    "azureAdminVmImageOffer": "Windows-10",
+    "azureAdminVmWindowsOSVersion": "RS3-Pro",
+    "azureAdminVmOSDiskName": "[concat(variables('azureAdminVmName'), '-OSDISK')]",
+    "azureAdminVmVmSize": "Standard_D4s_v3",
+    "azureAdminVmID": "[resourceId('Microsoft.Network/virtualNetworks', 'azureAdminVm')]",
+    "azureAdminVmSubnetRef": "[concat(variables('azureAdminVmID'), '/subnets/', variables('azureAdminVmSubnet1Name'))]",
+    "azureAdminVmNicName": "[concat(variables('azureAdminVmName'), '-NIC')]",
+    "azureAdminVm-PUBIPName": "[concat(variables('azureAdminVmName'), '-PIP')]",
+    "azureAdminVmInstallScriptFolder": ".",
+    "azureAdminVmInstallScriptFileName": "InstallazureAdminVm.ps1",
+    "azureAdminVmInstallURL": "https://raw.githubusercontent.com/deltadan/azure-admin-vm/master/InstallazureAdminVm.ps1"
+  },
+  "resources": [
+    {
+      "name": "azureAdminVm",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-03-30",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "azureAdminVm"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('azureAdminVmPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('azureAdminVmSubnet1Name')]",
+            "properties": {
+              "addressPrefix": "[variables('azureAdminVmSubnet1Prefix')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('azureAdminVm-PUBIPName')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2017-10-01",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "azureAdminVm-PUBIP"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+        }
+      }
+    },
+    {
+      "name": "[variables('azureAdminVmNicName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2017-10-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', 'azureAdminVm')]",
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('azureAdminVm-PUBIPName'))]"
+      ],
+      "tags": {
+        "displayName": "azureAdminVmNic"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('azureAdminVmSubnetRef')]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('azureAdminVm-PUBIPName'))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('azureAdminVmName')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2017-12-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('azureAdminVmNicName'))]"
+      ],
+      "tags": {
+        "displayName": "azureAdminVm"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('azureAdminVmVmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[variables('azureAdminVmName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('azureAdminVmImagePublisher')]",
+            "offer": "[variables('azureAdminVmImageOffer')]",
+            "sku": "[variables('azureAdminVmWindowsOSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage",
+            "diskSizeGB": 2048
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('azureAdminVmNicName'))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "InstallazureAdminVmApps",
+          "type": "extensions",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2017-12-01",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('azureAdminVmName'))]"
+           ],
+          "tags": {
+            "displayName": "Install azureAdminVm Applications"
+          },
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[variables('azureAdminVmInstallURL')]"
+              ],
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('azureAdminVmInstallScriptFolder'), '/', variables('azureAdminVmInstallScriptFileName'))]"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "outputs": {}
+}

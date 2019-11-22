@@ -42,8 +42,8 @@
     "azureAdminVmVmSize": "Standard_D4s_v3",
     "azureAdminVmID": "[resourceId('Microsoft.Network/virtualNetworks', 'azureAdminVm')]",
     "azureAdminVmSubnetRef": "[concat(variables('azureAdminVmID'), '/subnets/', variables('azureAdminVmSubnet1Name'))]",
-    "azureAdminVmNicName": "[concat(variables('azureAdminVmName'), '-NIC')]",
-    "azureAdminVm-PUBIPName": "[concat(variables('azureAdminVmName'), '-PIP')]",
+    "azureAdminVmNicName": "[concat(variables('azureAdminVmName'), '-nic')]",
+    "azureAdminVm-PUBIPName": "[concat(variables('azureAdminVmName'), '-pip')]",
     "azureAdminVmInstallScriptFolder": ".",
     "azureAdminVmInstallScriptFileName": "InstallazureAdminVm.ps1",
     "azureAdminVmInstallURL": "https://raw.githubusercontent.com/deltadan/azure-admin-vm/master/InstallazureAdminVm.ps1"

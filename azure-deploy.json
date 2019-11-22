@@ -20,16 +20,24 @@
       "metadata": {
         "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
       }
+    },
+    "adminSourceIpAddress": {
+      "type": "string",
+      "defaultValue": "*",
+      "metadata": {
+        "description": "Enter your IP address, x.x.x.x/32 (use ipchicken.com to find this)"
+      }
     }
   },
   "variables": {
     "azureAdminVmPrefix": "192.168.0.0/24",
     "azureAdminVmSubnet1Name": "azure-admin-vm",
     "azureAdminVmSubnet1Prefix": "192.168.0.0/24",
+    "azureAdminVmNsgName": "azure-admin-vm-nsg",
     "azureAdminVmName": "azure-admin-vm",
     "azureAdminVmImagePublisher": "MicrosoftWindowsDesktop",
-    "azureAdminVmImageOffer": "Windows-10",
-    "azureAdminVmWindowsOSVersion": "RS3-Pro",
+    "azureAdminVmImageOffer": "office-365",
+    "azureAdminVmWindowsOSVersion": "1903-evd-o365pp",
     "azureAdminVmOSDiskName": "[concat(variables('azureAdminVmName'), '-OSDISK')]",
     "azureAdminVmVmSize": "Standard_D4s_v3",
     "azureAdminVmID": "[resourceId('Microsoft.Network/virtualNetworks', 'azureAdminVm')]",
@@ -42,11 +50,43 @@
   },
   "resources": [
     {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2019-09-01",
+      "name": "[variables('azureAdminVmNsgName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "RDP",
+            "properties": {
+              "protocol": "TCP",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "[parameters('adminSourceIpAddress')]",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 300,
+              "direction": "Inbound",
+              "sourcePortRanges": [
+              ],
+              "destinationPortRanges": [
+              ],
+              "sourceAddressPrefixes": [
+              ],
+              "destinationAddressPrefixes": [
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "azureAdminVm",
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
-      "dependsOn": [],
+      "dependsOn": [
+      ],
       "tags": {
         "displayName": "azureAdminVm"
       },
@@ -71,7 +111,8 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-10-01",
-      "dependsOn": [],
+      "dependsOn": [
+      ],
       "tags": {
         "displayName": "azureAdminVm-PUBIP"
       },
@@ -89,7 +130,8 @@
       "apiVersion": "2017-10-01",
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworks', 'azureAdminVm')]",
-        "[resourceId('Microsoft.Network/publicIPAddresses', variables('azureAdminVm-PUBIPName'))]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('azureAdminVm-PUBIPName'))]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups', variables('azureAdminVmNsgName'))]"
       ],
       "tags": {
         "displayName": "azureAdminVmNic"
@@ -108,7 +150,10 @@
               }
             }
           }
-        ]
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('azureAdminVmNsgName'))]"
+        }
       }
     },
     {
@@ -159,7 +204,7 @@
           "apiVersion": "2017-12-01",
           "dependsOn": [
             "[resourceId('Microsoft.Compute/virtualMachines', variables('azureAdminVmName'))]"
-           ],
+          ],
           "tags": {
             "displayName": "Install azureAdminVm Applications"
           },
@@ -179,5 +224,6 @@
       ]
     }
   ],
-  "outputs": {}
+  "outputs": {
+  }
 }

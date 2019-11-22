@@ -10,7 +10,7 @@ Invoke-WebRequest -Uri $wslDownload -OutFile Ubuntu.appx -UseBasicParsing
 Add-AppxPackage .\Ubuntu.appx
 
 #Install Chocolatey
-Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
 #Assign Chocolatey Packages to Install
 $Packages = 'adobereader',`
@@ -23,7 +23,9 @@ $Packages = 'adobereader',`
             'googlechrome',`
             'docker-for-windows',`
             'visualstudiocode',`
-            'git'
+            'microsoft-teams',`
+            'microsoftazurestorageexplorer',`
+            'azure-data-studio'
 
 #Install Chocolatey Packages
 ForEach ($PackageName in $Packages)
@@ -39,11 +41,19 @@ $Extentions = 'ms-azuretools.vscode-azureterraform',`
               'ms-azure-devops.azure-pipelines',`
               'ms-vscode.csharp',`
               'ms-vscode-remote.remote-wsl',`
-              'ms-kubernetes-tools.vscode-kubernetes-tools'
+              'ms-kubernetes-tools.vscode-kubernetes-tools',`
+              'ms-vscode.powershell'
 
 #Install Visual Studio Code Extensions
 ForEach ($ExtentionName in $Extentions)
 {& 'C:\Program Files\Microsoft VS Code\bin\code.cmd' --install-extension $ExtentionName}
 
-#Add Demo User to docker group
-#Add-LocalGroupMember -Member dan -Group docker-users
+#Install Azure PowerShell
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+Set-ExecutionPolicy Bypass -Scope Process -Force; Install-Module -Name Az -AllowClobber -Scope AllUsers -Force
+
+#Install Azure CLI for Windows
+Set-ExecutionPolicy Bypass -Scope Process -Force;Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'
+
+#Reboot
+Restart-Computer

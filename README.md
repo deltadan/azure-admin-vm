@@ -1,5 +1,5 @@
-# Docker for Windows Dev Environment
-This one click deployment will build a Docker on Windows Development box in Azure.
+# Azure Administration VM
+Have you ever spent hours building a machine to use as a admin workstation for Azure?  Do you need it to also run Docker containers?  What about installing Windows Subsystem for Linux?  Then this one click deployment is for you.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fdeltadan%2Fazure-admin-vm%2Fmaster%2Fazure-deploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -19,6 +19,10 @@ This one click deployment will build a Docker on Windows Development box in Azur
 1. Git for Windows (bash)
 1. Github Desktop
 1. Visual Studio Code (Azure Tools, Docker, Terraform)
+1. Office 365 Pro Plus
+1. Teams
+1. Azure Data Studio
+1. Azure Storage Explorer
 
 **Creds**
 1. User: Supplied on deploy

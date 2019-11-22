@@ -40,6 +40,7 @@ This one click deployment will build a Docker on Windows Development box in Azur
 ![alt text](https://github.com/deltadan/azure-admin-vm/blob/master/media/wsl.jpg "Configure Ubuntu for Windows")
 
 **Visual Studio Code Extentions Installed**
+
 ![alt text](https://github.com/deltadan/azure-admin-vm/blob/master/media/vscode.jpg "Configure Ubuntu for Windows")
 
 

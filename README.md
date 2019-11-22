@@ -28,6 +28,7 @@ This one click deployment will build a Docker on Windows Development box in Azur
 1. Once the VM is deployed use the Azure portal to connect.
 1. Double click the Docker for Windows shortcut on the desktop.
 1. It will take a few minutes for Docker to start the first time.
+
 ![alt text](https://github.com/deltadan/azure-admin-vm/blob/master/media/dockerrun.jpg "Docker is Running on Windows 10 in Azure!")
 
 
@@ -35,6 +36,7 @@ This one click deployment will build a Docker on Windows Development box in Azur
 1. Start -> Ubuntu 18.04
 1. Follow prompts to install
 1. Once installed run sudo apt-get update
+
 ![alt text](https://github.com/deltadan/azure-admin-vm/blob/master/media/wsl.jpg "Configure Ubuntu for Windows")
 
 **Visual Studio Code Extentions Installed**

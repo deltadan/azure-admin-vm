@@ -37,7 +37,9 @@ $Extentions = 'ms-azuretools.vscode-azureterraform',`
               'msazurermtools.azurerm-vscode-tools',`
               'ms-vscode.azurecli',`
               'ms-azure-devops.azure-pipelines',`
-              'ms-vscode.csharp'
+              'ms-vscode.csharp',`
+              'ms-vscode-remote.remote-wsl',`
+              'ms-kubernetes-tools.vscode-kubernetes-tools'
 
 #Install Visual Studio Code Extensions
 ForEach ($ExtentionName in $Extentions)

@@ -30,8 +30,9 @@
     }
   },
   "variables": {
-    "azureAdminVmPrefix": "192.168.0.0/24",
-    "azureAdminVmSubnet1Name": "azure-admin-vm",
+    "azureAdminVmVnetName": "azure-admin-vm-vnet",
+    "azureAdminVmVnetPrefix": "192.168.0.0/24",
+    "azureAdminVmVnetSubnet1Name": "azure-admin-vm",
     "azureAdminVmSubnet1Prefix": "192.168.0.0/24",
     "azureAdminVmNsgName": "azure-admin-vm-nsg",
     "azureAdminVmName": "azure-admin-vm",
@@ -41,7 +42,7 @@
     "azureAdminVmOSDiskName": "[concat(variables('azureAdminVmName'), '-OSDISK')]",
     "azureAdminVmVmSize": "Standard_D4s_v3",
     "azureAdminVmID": "[resourceId('Microsoft.Network/virtualNetworks', 'azureAdminVm')]",
-    "azureAdminVmSubnetRef": "[concat(variables('azureAdminVmID'), '/subnets/', variables('azureAdminVmSubnet1Name'))]",
+    "azureAdminVmSubnetRef": "[concat(variables('azureAdminVmID'), '/subnets/', variables('azureAdminVmVnetSubnet1Name'))]",
     "azureAdminVmNicName": "[concat(variables('azureAdminVmName'), '-nic')]",
     "azureAdminVm-PUBIPName": "[concat(variables('azureAdminVmName'), '-pip')]",
     "azureAdminVmInstallScriptFolder": ".",
@@ -81,24 +82,24 @@
       }
     },
     {
-      "name": "azureAdminVm",
+      "name": "[variables('azureAdminVmVnetName')]",
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
       "dependsOn": [
       ],
       "tags": {
-        "displayName": "azureAdminVm"
+        "displayName": "azure-admin-vm-vnet"
       },
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "[variables('azureAdminVmPrefix')]"
+            "[variables('azureAdminVmVnetPrefix')]"
           ]
         },
         "subnets": [
           {
-            "name": "[variables('azureAdminVmSubnet1Name')]",
+            "name": "[variables('azureAdminVmVnetSubnet1Name')]",
             "properties": {
               "addressPrefix": "[variables('azureAdminVmSubnet1Prefix')]"
             }
@@ -211,7 +212,7 @@
           "properties": {
             "publisher": "Microsoft.Compute",
             "type": "CustomScriptExtension",
-            "typeHandlerVersion": "1.4",
+            "typeHandlerVersion": "1.9",
             "autoUpgradeMinorVersion": true,
             "settings": {
               "fileUris": [

@@ -130,7 +130,7 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2017-10-01",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', 'azureAdminVm')]",
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('azureAdminVmVnetName'))]",
         "[resourceId('Microsoft.Network/publicIPAddresses', variables('azureAdminVm-PUBIPName'))]",
         "[resourceId('Microsoft.Network/networkSecurityGroups', variables('azureAdminVmNsgName'))]"
       ],

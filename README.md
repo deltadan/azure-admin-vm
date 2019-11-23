@@ -44,7 +44,7 @@ Have you ever spent hours building a machine to use as a admin workstation for A
 1. Run the following command to install the Azure CLI into WSL
 
 ```
-curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+sudo apt-get update -y && curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 ```
 
 ![alt text](https://github.com/deltadan/azure-admin-vm/blob/master/media/wsl.jpg "Configure Ubuntu for Windows")

@@ -8,6 +8,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-Expression ((New-Object
 $Packages = `
     'adobereader', `
     'winrar', `
+    'wsl', `
     'git', `
     'putty.install', `
     'sysinternals', `

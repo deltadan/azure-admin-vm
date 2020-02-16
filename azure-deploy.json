@@ -41,7 +41,7 @@
     "azureAdminVmWindowsOSVersion": "1903-evd-o365pp",
     "azureAdminVmOSDiskName": "[concat(variables('azureAdminVmName'), '-OSDISK')]",
     "azureAdminVmVmSize": "Standard_D4s_v3",
-    "azureAdminVmID": "[resourceId('Microsoft.Network/virtualNetworks', 'azureAdminVm')]",
+    "azureAdminVmID": "[resourceId('Microsoft.Network/virtualNetworks', 'azure-admin-vm-vnet')]",
     "azureAdminVmSubnetRef": "[concat(variables('azureAdminVmID'), '/subnets/', variables('azureAdminVmVnetSubnet1Name'))]",
     "azureAdminVmNicName": "[concat(variables('azureAdminVmName'), '-nic')]",
     "azureAdminVm-PUBIPName": "[concat(variables('azureAdminVmName'), '-pip')]",

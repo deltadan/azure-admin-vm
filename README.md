@@ -9,7 +9,7 @@ Have you ever spent hours building a machine to use as a admin workstation for A
 
 1. Adobe Reader
 1. Azure Storage Explorer
-1. Google Chrome 64bit
+1. Microsoft Edge
 1. Git for Windows (bash)
 1. Github Desktop
 1. Office 365 Pro Plus
@@ -17,7 +17,7 @@ Have you ever spent hours building a machine to use as a admin workstation for A
 1. python3
 1. SysInternals
 1. Teams
-1. Visual Studio Code (Azure Tools, Docker, Terraform)
+1. Visual Studio Code
 1. Windows Subsystem for Linux (Ubuntu 18.04)
 1. WinRar
 
@@ -29,7 +29,6 @@ Have you ever spent hours building a machine to use as a admin workstation for A
 **Configure Windows Subsystem for Linux**
 1. Start -> Ubuntu 18.04
 1. Follow prompts to install
-1. Once installed run sudo apt-get update
 1. Run the following command to install the Azure CLI into WSL
 
 ```

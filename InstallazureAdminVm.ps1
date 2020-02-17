@@ -36,7 +36,6 @@ Add-AppxPackage -Path ~/Ubuntu.appx
 RefreshEnv
 Ubuntu1804 install --root
 Ubuntu1804 run apt update
-Ubuntu1804 run curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 #Reboot
 Restart-Computer -Force
